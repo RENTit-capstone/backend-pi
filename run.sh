@@ -5,7 +5,7 @@ if [ ! -d "venv" ]; then
 fi
 
 # go into venv
-source venv/bin/activate
+source venv/Scripts/activate
 
 # install packages
 pip install -r requirements.txt
