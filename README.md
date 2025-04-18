@@ -3,7 +3,7 @@
 
 Raspberry PI에서 동작할 것을 염두로 개발하고 있고, 프론트엔드에서 신호를 받아와 *gpiozero*를 이용하여 GPIO를 제어합니다.
 
-그리고 RabbitMQ 와 *syncio-mqtt*를 이용해서 통신합니다.
+그리고 RabbitMQ 와 *asyncio-mqtt*를 이용해서 통신합니다.
 
 # How to start?
 아래의 스크립트를 실행하세요:
