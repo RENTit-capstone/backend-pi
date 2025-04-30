@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt
 import threading
 import json
+import time
 
 from services.config import settings
 
@@ -54,3 +55,20 @@ def start():
   thread = threading.Thread(target=mqtt_client.loop_forever, daemon=True)
   thread.start()
   print(f"[MQTT] Loop started in background")
+
+def run_mqtt_test():
+    def handle_test_message(payload):
+        print(f"[TEST] Callback triggered with payload: {payload}")
+
+    print("[TEST] Starting MQTT client...")
+    subscribe("test/topic", handle_test_message)
+    start()
+
+    time.sleep(2)
+    publish("test/topic", {
+        "message": "Hello from test",
+        "timestamp": "2025-04-30T12:34:56"
+    })
+
+    time.sleep(5)
+    print("[TEST] Done.")
