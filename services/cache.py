@@ -1,6 +1,6 @@
 otp_cache = {}
 
-def cache_otp_result(otp: str, response: dict):
+def cache_otp_result(otp, response):
     otp_cache[otp] = {
         "verified": response.get("valid"),
         "response": response
