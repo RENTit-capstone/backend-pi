@@ -24,7 +24,7 @@ def send_otp_verification(otp: str, action: str):
 
 # callback function for subscription
 def handle_otp_result(payload):
-    otp = payload.get("get")
+    otp = payload.get("otp")
     if not otp:
         print("[OTP] Invalid payload: missing otp")
         return
