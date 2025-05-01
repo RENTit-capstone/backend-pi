@@ -10,7 +10,7 @@ locker_id = settings.LOCKER_ID
 otp_cache = {}
 
 # publish mqtt message, which topic is otp_verification
-def send_otp_verification(otp: str, locker_id: str, university_id: str, action: str):
+def send_otp_verification(otp: str, action: str):
     topic = f"event/{university_id}/{locker_id}/otp_verification"
     payload = {
         "otp": otp,
