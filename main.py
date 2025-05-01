@@ -1,12 +1,7 @@
-from fastapi import FastAPI
+from services import mqtt_client
 
-app = FastAPI()
+def main():
+  mqtt_client.run_mqtt_test()
 
-@app.get("/")
-def read_root():
-    return {"message": "Locker API running on Raspberry PI"}
-
-@app.post("/unlock")
-def unlock_locket(locker_id: int):
-    return {"status": "unlocked", "locker_id": locker_id}
-
+if __name__ == "__main__":
+  main()
