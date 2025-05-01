@@ -1,6 +1,10 @@
 from services import mqtt_client
+from services.config import settings
 import uuid
 import time
+
+university_id = settings.UNIVERSITY_ID
+locker_id = settings.LOCKER_ID
 
 # Simple data cache for storing OTP verification status
 # key: otp, value: {verified, user_id, ...}
