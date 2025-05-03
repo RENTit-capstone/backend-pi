@@ -29,13 +29,14 @@ slot_items : dict[str, dict | None] = {
 }
 
 def get_slot_item(slot_id: str) -> dict | None:
-    pass
+    return slot_items.get(slot_id)
 
 def set_slot_item(slot_id: str, item: dict | None) -> None:
-    pass
+    if slot_id in slot_items:
+        slot_items[slot_id] = item
 
 def get_all_slot_states() -> dict[str, dict | None]:
-    pass
+    return slot_items.copy()
 
 def get_available_slots() -> list[str]:
-    pass
+    return [slot for slot, item in slot_items.items() if item is None]
