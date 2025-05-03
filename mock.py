@@ -26,7 +26,6 @@ def handle_verification_request(payload):
             {"item_id": "item_001", "name": "삼각대"},
             {"item_id": "item_002", "name": "조명"}
         ]
-        response["available_slots"] = [2, 5, 6]
 
     elif action == "borrow":
         response["items"] = [
@@ -38,7 +37,6 @@ def handle_verification_request(payload):
         response["items"] = [
             {"item_id": "item_201", "name": "공구 세트"}
         ]
-        response["available_slots"] = [1, 4]
 
     elif action == "retrieve":
         response["items"] = [

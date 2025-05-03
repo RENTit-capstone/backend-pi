@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 
 from services import otp_service
-from services.cache import get_otp_result
+from services.cache import get_otp_result, get_available_slots
 
 router = APIRouter()
 
@@ -16,6 +16,14 @@ def verify_otp(request: OTPRequest) -> dict:
     return {"message": "OTP verification request sent"}
 
 @router.get("/verify/result")
-def get_result() -> dict:
+def get_verification_result() -> dict:
     result = get_otp_result()
-    return result if result is not None else {"verified": None}
+    if result is None:
+        return {"verified": None}
+    
+    available_slots = get_available_slots()
+
+    return {
+        **result,
+        "available_slots": available_slots
+    }
