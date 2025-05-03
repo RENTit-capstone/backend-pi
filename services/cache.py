@@ -25,7 +25,7 @@ def get_otp_result() -> dict | None:
 
 # ========== Slots ==========
 slot_items : dict[str, dict | None] = {
-    slot_id: None for slot_id in settings.slots
+    slot_id: None for slot_id in settings.SLOTS
 }
 
 def get_slot_item(slot_id: str) -> dict | None:
