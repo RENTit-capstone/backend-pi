@@ -1,5 +1,3 @@
-# routers/verify.py
-
 from fastapi import APIRouter, Query
 from pydantic import BaseModel
 
@@ -21,6 +19,6 @@ def verify_otp(request: OTPRequest) -> dict:
 
 
 @router.get("/verify/result")
-def get_result(otp: str = Query(..., description="OTP to check result for")) -> dict:
-    result = get_otp_result(otp)
+def get_result() -> dict:
+    result = get_otp_result()
     return result if result is not None else {"verified": None}

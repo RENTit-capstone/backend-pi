@@ -1,4 +1,4 @@
-from services.config import Settings
+from services.config import settings
 # ========== OTP ==========
 class CurrentOtpState:
     def __init__(self):
@@ -25,7 +25,7 @@ def get_otp_result() -> dict | None:
 
 # ========== Slots ==========
 slot_items : dict[str, dict | None] = {
-    slot_id: None for slot_id in Settings.slots
+    slot_id: None for slot_id in settings.slots
 }
 
 def get_slot_item(slot_id: str) -> dict | None:
