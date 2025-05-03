@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     MQTT_KEEPALIVE: int = 60
     UNIVERSITY_ID: str
     LOCKER_ID: str
+    SLOTS: list[str] = [""]
 
     model_config = {
         "env_file": "../.env"
