@@ -10,6 +10,9 @@ source venv/Scripts/activate
 # install packages
 pip install -r requirements.txt
 
+# set environment variable
+export USE_GPIO=False
+
 # run FastAPI
 uvicorn main:app --host 0.0.0.0 --port 8000
 
