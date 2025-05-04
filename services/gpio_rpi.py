@@ -7,16 +7,27 @@ class GPIORpiController:
     }
 
     def __init__(self):
-        pass
+        GPIO.setmode(GPIO.BCM)
+        self.pwm = {}
+        for slot_id, pins in self.PIN_MAP.items():
+            GPIO.setup(pins["servo"], GPIO.OUT)
+            GPIO.setup(pins["reed"], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+            pwm = GPIO.PWM(pins["servo"], 50)
+            pwm.start(0)
+            self.pwm[slot_id] = pwm
 
     def set_angle(self, slot_id: str, angle: int):
-        pass
+        duty = 2.5 + (angle / 180.0) * 10
+        self.pwm[slot_id].ChangeDutyCycle(duty)
+        time.sleep(0.5)
+        self.pwm[slot_id].ChangeDutyCycle(0)
 
     def open_slot(self, slot_id: str):
-        pass
+        self.set_angle(slot_id, 90)
 
     def close_slot(self, slot_id: str):
-        pass
+        self.set_angle(slot_id, 0)
 
     def read_reed(self, slot_id: str) -> bool:
-        pass
+        return GPIO.input(self.PIN_MAP[slot_id]["reed"]) == GPIO.HIGH
+    
