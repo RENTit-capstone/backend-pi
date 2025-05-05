@@ -1,6 +1,8 @@
 from services import mqtt_client
-from services.cache import cache_otp_result
+from services.gpio_controller import gpio
+from services.cache import cache_otp_result, set_slot_item, get_slot_item
 from services.config import settings
+import time
 
 university_id = settings.UNIVERSITY_ID
 locker_id = settings.LOCKER_ID
@@ -19,3 +21,27 @@ def start_subscribers() -> None:
     mqtt_client.start()
     mqtt_client.subscribe(topic, handle_otp_result)
     print(f"[LOGIC] Subscribed to: {topic}")
+
+def perform_action(item: dict, slot_id: str, action: str) -> bool:
+    try:
+        print(f"[LOGIC] Performing {action} on slot {slot_id} with item {item}")
+
+        gpio.open_slot(slot_id)
+        print(f"[LOGIC] Opened slot {slot_id}")
+
+        time.sleep(2)
+
+        if action in ["store", "return"]:
+            set_slot_item(slot_id, item)
+            print(f"[LOGIC] Stored item {item['item_id']} in slot {slot_id}")
+        elif action in ["borrow", "retrieve"]:
+            set_slot_item(slot_id, None)
+            print(f"[LOGIC] Removed item from slot {slot_id}:")
+        
+        gpio.close_slot(slot_id)
+        print(f"[LOGIC] Closed slot {slot_id}")
+        
+        return True
+    except Exception as e:
+        print(f"[ERROR] Failed to perform action: {e}")
+        return False
