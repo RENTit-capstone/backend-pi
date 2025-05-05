@@ -1,3 +1,7 @@
+from services.cache import get_current_open_slot, set_current_open_slot
+
+import random
+
 class GPIOMockController:
     def __init__(self):
         print("[MOCK GPIO] Initialized mock controller")
@@ -8,11 +12,20 @@ class GPIOMockController:
     def open_slot(self, slot_id: str):
         self.set_angle(slot_id, 90)
         print(f"[MOCK GPIO] Slot {slot_id}: OPEN")
+        set_current_open_slot(slot_id)
     
     def close_slot(self, slot_id: str):
         self.set_angle(slot_id, 0)
         print(f"[MOCK GPIO] Slot {slot_id}: CLOSE")
     
     def read_reed(self, slot_id: str) -> bool:
-        print(f"[MOCK GPIO] Slot {slot_id}: read_reed() -> False")
-        return False
+        result = random.random() < 0.3
+        print(f"[MOCK GPIO] Slot {slot_id}: read_reed() -> {result}")
+        return result
+
+    def is_slot_closed(self) -> bool:
+        slot_id = get_current_open_slot()
+        if slot_id is None:
+            print("[GPIO] 현재 열린 사물함 정보가 없습니다.")
+            return False
+        return self.read_reed(slot_id)

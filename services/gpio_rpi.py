@@ -1,6 +1,8 @@
 import RPi.GPIO as GPIO
 import time
 
+from services.cache import get_current_open_slot
+
 class GPIORpiController:
     PIN_MAP = {
         "A1": {"servo": 17, "reed": 27}
@@ -31,3 +33,9 @@ class GPIORpiController:
     def read_reed(self, slot_id: str) -> bool:
         return GPIO.input(self.PIN_MAP[slot_id]["reed"]) == GPIO.HIGH
     
+    def is_slot_closed(self) -> bool:
+        slot_id = get_current_open_slot()
+        if slot_id is None:
+            print("[GPIO] 현재 열린 사물함 정보가 없습니다.")
+            return False
+        return self.read_reed(slot_id)

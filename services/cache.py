@@ -28,6 +28,15 @@ slot_items : dict[str, dict | None] = {
     slot_id: None for slot_id in settings.SLOTS
 }
 
+current_open_slot: str | None = None
+
+def set_current_open_slot(slot_id: str) -> None:
+    global current_open_slot
+    current_open_slot = slot_id
+
+def get_current_open_slot() -> str | None:
+    return current_open_slot
+
 def get_slot_item(slot_id: str) -> dict | None:
     return slot_items.get(slot_id)
 

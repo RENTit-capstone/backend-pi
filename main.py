@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from routers import verify
+from routers import gpio
 from services.logic import start_subscribers
 
 
@@ -17,6 +18,7 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(verify.router, prefix="/api")
+    app.include_router(gpio.router, prefix="/api")
 
     @app.get("/")
     def root():
