@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     USE_GPIO: bool = os.getenv("USE_GPIO", "False") == "True"
 
     model_config = {
-        "env_file": "../.env"
+        "env_file": os.path.join(os.path.dirname(__file__), "..", ".env")
     }
 
 settings = Settings()
