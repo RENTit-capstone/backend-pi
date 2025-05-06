@@ -49,3 +49,7 @@ def get_all_slot_states() -> dict[str, dict | None]:
 
 def get_available_slots() -> list[str]:
     return [slot for slot, item in slot_items.items() if item is None]
+
+def reset_slot_cache():
+    global current_open_slot
+    current_open_slot = None
