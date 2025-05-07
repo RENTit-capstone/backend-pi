@@ -1,4 +1,4 @@
-import RPi.GPIO as GPIO
+from gpiozero import Servo, DigitalInputDevice
 import time
 
 from services.cache import get_current_open_slot
@@ -9,20 +9,19 @@ class GPIORpiController:
     }
 
     def __init__(self):
-        GPIO.setmode(GPIO.BCM)
-        self.pwm = {}
+        self.servos = {}
+        self.reeds = {}
+
         for slot_id, pins in self.PIN_MAP.items():
-            GPIO.setup(pins["servo"], GPIO.OUT)
-            GPIO.setup(pins["reed"], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-            pwm = GPIO.PWM(pins["servo"], 50)
-            pwm.start(0)
-            self.pwm[slot_id] = pwm
+            self.servos[slot_id] = Servo(pins["servo"])
+            self.reeds[slot_id] = DigitalInputDevice(pins["reed"], pull_up=False)
 
     def set_angle(self, slot_id: str, angle: int):
-        duty = 2.5 + (angle / 180.0) * 10
-        self.pwm[slot_id].ChangeDutyCycle(duty)
+        angle = max(0, min(angle, 180))
+        position = (angle - 90) / 90
+        self.servos[slot_id].value = position
         time.sleep(0.5)
-        self.pwm[slot_id].ChangeDutyCycle(0)
+        self.servos[slot_id].detach()
 
     def open_slot(self, slot_id: str):
         self.set_angle(slot_id, 90)
@@ -31,7 +30,7 @@ class GPIORpiController:
         self.set_angle(slot_id, 0)
 
     def read_reed(self, slot_id: str) -> bool:
-        return GPIO.input(self.PIN_MAP[slot_id]["reed"]) == GPIO.HIGH
+        return self.reeds[slot_id].value
     
     def is_slot_closed(self) -> bool:
         slot_id = get_current_open_slot()
