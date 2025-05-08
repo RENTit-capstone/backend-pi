@@ -1,6 +1,6 @@
 from services import mqtt_client
 from services.gpio_controller import gpio
-from services.cache import cache_otp_result, set_slot_item, get_slot_item
+from services.cache import cache_otp_result, set_slot_item, get_slot_item, set_current_open_slot
 from services.config import settings
 import time
 
@@ -28,6 +28,8 @@ def perform_action(item: dict, slot_id: str, action: str) -> bool:
 
         gpio.open_slot(slot_id)
         print(f"[LOGIC] Opened slot {slot_id}")
+        
+        set_current_open_slot(slot_id)
 
         time.sleep(2)
 
