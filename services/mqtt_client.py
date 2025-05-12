@@ -38,7 +38,7 @@ def publish(topic: str, message: dict) -> None:
     try:
         json_message = json.dumps(message)
         print(f"[MQTT] Publishing to {topic}: {json_message}")
-        mqtt_client.publish(topic, json_message)
+        mqtt_client.publish(topic, json_message, qos = 1)
     except Exception as e:
         print(f"[MQTT] Failed to publish to {topic}: {e}")
 
