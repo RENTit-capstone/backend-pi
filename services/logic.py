@@ -1,10 +1,12 @@
 from services import mqtt_client
 from services.gpio_controller import gpio
-from services.cache import cache_otp_result, get_otp_key, set_member_id, set_action, wipe_state, set_error
+from services.cache import (
+    cache_otp_result, get_otp_key, set_member_id, set_action, wipe_state, set_error,
+    get_locker_id, get_rental_id, get_member_id, get_action
+)
 from services.config import settings
 import time
 
-university_id = settings.UNIVERSITY_ID
 locker_id = settings.LOCKER_ID
 
 def handle_otp_result(payload: dict) -> None:
@@ -85,39 +87,41 @@ def start_subscribers() -> None:
     print(f"\tempty_locker: {empty_locker_topic}")
     print(f"\tlocker_event: {locker_event_topic}")
 
-# TODO: Fix function below
-def perform_action(item: dict, slot_id: str, action: str) -> bool:
+def perform_action() -> bool:
     try:
-        print(f"[LOGIC] Performing {action} on slot {slot_id} with item {item}")
+        slot_id = get_locker_id()
+        rental_id = get_rental_id()
+        member_id = get_member_id()
+        action = get_action()
+
+        if not all([slot_id, rental_id, member_id, action]):
+            print("[LOGIC] Missing required state for perform_aciton")
+            return False
+        
+        print(f"[LOGIC] Performing {action} on locker {slot_id} (rentalId={rental_id}, memberId={member_id})")
 
         gpio.open_slot(slot_id)
-        print(f"[LOGIC] Opened slot {slot_id}")
-        
-        set_current_open_slot(slot_id)
+        print(f"[LOGIC] Locker {slot_id} opened")
 
         time.sleep(2)
-
-        if action in ["store", "return"]:
-            set_slot_item(slot_id, item)
-            print(f"[LOGIC] Stored item {item['item_id']} in slot {slot_id}")
-        elif action in ["borrow", "retrieve"]:
-            set_slot_item(slot_id, None)
-            print(f"[LOGIC] Removed item from slot {slot_id}:")
         
         gpio.close_slot(slot_id)
         print(f"[LOGIC] Closed slot {slot_id}")
 
-        # TODO: Shoud contain rentalId, memberId
         topic = "locker/request/event"
         payload = {
             "deviceId": locker_id,
             "lockerId": slot_id,
-            "rentalId": None,
-            "memberId": None,
+            "rentalId": rental_id,
+            "memberId": member_id,
             "action": action
         }
-        
+
+        mqtt_client.publish(topic, payload)
+        print(f"[LOGIC] Event published: {payload}")
+
         return True
+    
     except Exception as e:
         print(f"[ERROR] Failed to perform action: {e}")
         return False
