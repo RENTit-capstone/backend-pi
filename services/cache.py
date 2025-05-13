@@ -1,66 +1,62 @@
 from services.config import settings
-# ========== OTP ==========
-class CurrentOtpState:
+
+class CurrentState:
     def __init__(self):
         self.otp: str | None = None
         self.verified: bool | None = None
         self.response: dict | None = None
 
-current_otp_state = CurrentOtpState()
+        self.rental_id: str | None = None
+        self.action: str | None = None
+        self.member_id: str | None = None
+        self.locker_id: str | None = None
 
-otp_key = None
+state = CurrentState()
 
-def set_otp_key(otp) -> None:
-    global otp_key
-    otp_key = otp
+def set_otp_key(otp: str) -> None:
+    state.otp = otp
     print("[Cache] Otp key cached successfully.")
 
-def get_otp_key() -> str:
-    return otp_key
+def cache_otp_result(response: dict) -> None:
+    state.response = response
+    state.verified = True
+    print(f"[Cache] OTP result cached for {state.otp}")
 
-def wipe_otp_result() -> None:
-    current_otp_state.otp = None
-    current_otp_state.verified = False
-    current_otp_state.response = None
-
-def cache_otp_result(otp: str, response: dict) -> None:
-    current_otp_state.otp = otp
-    current_otp_state.response = response
-    current_otp_state.verified = True
-
-def get_otp_result() -> dict | None:
-    if current_otp_state.verified and current_otp_state.response is not None:
-        return current_otp_state.response
+def get_otp_key() -> dict | None:
+    if state.verified and state.response is not None:
+        return state.response
     return None
 
-# ========== Slots ==========
-# TODO: delete Slots
-slot_items : dict[str, dict | None] = {
-    slot_id: None for slot_id in settings.SLOTS
-}
+def wipe_state() -> None:
+    state.otp = None
+    state.verified = False
+    state.response = None
+    state.rental_id = None
+    state.action = None
+    state.member_id = None
+    state.locker_id = None
+    print("[Cache] State wiped.")
 
-current_open_slot: str | None = None
+def set_rental_id(rental_id: str) -> None:
+    state.rental_id = rental_id
 
-def set_current_open_slot(slot_id: str) -> None:
-    global current_open_slot
-    current_open_slot = slot_id
+def get_rental_id() -> str | None:
+    return state.rental_id
 
-def get_current_open_slot() -> str | None:
-    return current_open_slot
+def set_action(action: str) -> None:
+    state.action = action
 
-def get_slot_item(slot_id: str) -> dict | None:
-    return slot_items.get(slot_id)
+def get_action() -> str | None:
+    return state.action
 
-def set_slot_item(slot_id: str, item: dict | None) -> None:
-    if slot_id in slot_items:
-        slot_items[slot_id] = item
+def set_member_id(member_id: str) -> None:
+    state.member_id = member_id
 
-def get_all_slot_states() -> dict[str, dict | None]:
-    return slot_items.copy()
+def get_member_id() -> str | None:
+    return state.member_id
 
-def get_available_slots() -> list[str]:
-    return [slot for slot, item in slot_items.items() if item is None]
+def set_locker_id(locker_id: str) -> None:
+    state.locker_id = locker_id
 
-def reset_slot_cache():
-    global current_open_slot
-    current_open_slot = None
+def get_locker_id() -> str | None:
+    return state.locker_id

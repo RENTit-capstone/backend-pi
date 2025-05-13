@@ -32,6 +32,6 @@ def locker_closed_status():
 def locker_empty_check_request():
     pass
 
-@router.get("/locekr/empty/result")
+@router.get("/locker/empty/result")
 def locker_empty_result():
     pass
