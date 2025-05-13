@@ -8,6 +8,16 @@ class CurrentOtpState:
 
 current_otp_state = CurrentOtpState()
 
+otp_key = None
+
+def set_otp_key(otp) -> None:
+    global otp_key
+    otp_key = otp
+    print("[Cache] Otp key cached successfully.")
+
+def get_otp_key() -> str:
+    return otp_key
+
 def wipe_otp_result() -> None:
     current_otp_state.otp = None
     current_otp_state.verified = False
@@ -16,7 +26,7 @@ def wipe_otp_result() -> None:
 def cache_otp_result(otp: str, response: dict) -> None:
     current_otp_state.otp = otp
     current_otp_state.response = response
-    current_otp_state.verified = response.get("valid")
+    current_otp_state.verified = True
 
 def get_otp_result() -> dict | None:
     if current_otp_state.verified and current_otp_state.response is not None:
@@ -24,6 +34,7 @@ def get_otp_result() -> dict | None:
     return None
 
 # ========== Slots ==========
+# TODO: delete Slots
 slot_items : dict[str, dict | None] = {
     slot_id: None for slot_id in settings.SLOTS
 }

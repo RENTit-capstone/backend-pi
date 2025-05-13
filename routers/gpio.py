@@ -26,3 +26,12 @@ def perform_locker_action(request: PerformRequest) -> dict:
 def locker_closed_status():
     closed = gpio.is_slot_closed()
     return {"closed": closed}
+
+# TODO: implement below
+@router.post("/locker/empty")
+def locker_empty_check_request():
+    pass
+
+@router.get("/locekr/empty/result")
+def locker_empty_result():
+    pass
