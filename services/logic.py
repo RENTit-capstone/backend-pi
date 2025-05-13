@@ -1,6 +1,6 @@
 from services import mqtt_client
 from services.gpio_controller import gpio
-from services.cache import cache_otp_result, get_otp_key
+from services.cache import cache_otp_result, get_otp_key, set_member_id, set_action, wipe_state, set_error
 from services.config import settings
 import time
 
@@ -8,19 +8,50 @@ university_id = settings.UNIVERSITY_ID
 locker_id = settings.LOCKER_ID
 
 def handle_otp_result(payload: dict) -> None:
-    if payload.get("success") == "false":
-        print(f"[LOGIC] Failed to verify...: {payload.get("message")}")
+    if payload.get("success") is not True:
+        set_error(payload.get("message", "OTP 인증 실패"))
+        print(f"[LOGIC] OTP verification failed: {payload.get('message')}")
+        wipe_state()
         return
-    
+
     otp = get_otp_key()
     if otp is None:
-        print(f"[LOGIC] OTP result message came, but no OTP found now.")
+        print(f"[LOGIC] OTP result received, but no OTP key is set.")
+        wipe_state()
         return
-    
-    data : dict = payload.get("data")
 
-    cache_otp_result(otp, data)
-    print(f"[LOGIC] OTP result cached: {otp} → {data}")
+    data = payload.get("data")
+    if data is None:
+        print("[LOGIC] OTP result missing data field.")
+        wipe_state()
+        return
+
+    try:
+        member_id = data["memberId"]
+        action = data["action"]
+        rentals = data["rentals"]
+
+        set_member_id(member_id)
+        set_action(action)
+
+        parsed_result = {
+            "user_name": member_id,
+            "items": []
+        }
+
+        for r in rentals:
+            parsed_result["items"].append({
+                "item_id": r["itemId"],
+                "name": r["itemName"],
+                "slot": r.get("lockerId")
+            })
+
+        cache_otp_result(parsed_result)
+        print(f"[LOGIC] OTP result cached for user {member_id}")
+
+    except Exception as e:
+        print(f"[LOGIC] Failed to parse OTP result payload: {e}")
+        wipe_state()
 
 # TODO: implement below
 def handle_empty_locker():

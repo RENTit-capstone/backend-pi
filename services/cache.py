@@ -10,6 +10,7 @@ class CurrentState:
         self.action: str | None = None
         self.member_id: str | None = None
         self.locker_id: str | None = None
+        self.error: str | None = None
 
 state = CurrentState()
 
@@ -60,3 +61,9 @@ def set_locker_id(locker_id: str) -> None:
 
 def get_locker_id() -> str | None:
     return state.locker_id
+
+def set_error(msg: str) -> None:
+    state.error = msg
+
+def get_error() -> str | None:
+    return state.error
