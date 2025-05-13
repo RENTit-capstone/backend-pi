@@ -1,7 +1,7 @@
 from services import mqtt_client
 from services.gpio_controller import gpio
 from services.cache import (
-    cache_otp_result, get_otp_key, set_member_id, set_action, wipe_state, set_error,
+    cache_otp_result, get_otp_key, set_member_id, set_action, wipe_state, set_error, set_available_slots,
     get_locker_id, get_rental_id, get_member_id, get_action
 )
 from services.config import settings
@@ -54,14 +54,6 @@ def handle_otp_result(payload: dict) -> None:
     except Exception as e:
         print(f"[LOGIC] Failed to parse OTP result payload: {e}")
         wipe_state()
-
-# TODO: implement below
-def handle_empty_locker():
-    pass
-
-# TODO: implement below
-def handle_event_result():
-    pass
 
 def get_empty_slot(rentalId: str, action: str) -> None:
     topic = "locker/request/available"
@@ -125,3 +117,30 @@ def perform_action() -> bool:
     except Exception as e:
         print(f"[ERROR] Failed to perform action: {e}")
         return False
+    
+def handle_empty_locker(payload: dict) -> None:
+    if payload.get("success") is not True:
+        print(f"[LOGIC] Failed to get empty lockers: {payload.get('message')}")
+        set_error(payload.get("message", "빈 사물함 목록 요청 실패"))
+        wipe_state()
+        return
+    
+    data = payload.get("data")
+    if data is None or "lockers" not in data:
+        print("[LOGIC] Missing lockers in empty locker response.")
+        set_error("사물함 목록이 없습니다")
+        wipe_state()
+        return
+    
+    available_lockers = [
+        locker["lockerId"]
+        for locker in data["lockers"]
+        if locker.get("available") is True
+    ]
+
+    set_available_slots(available_lockers)
+    print(f"[LOGIC] Available slots set: {available_lockers}")
+
+# TODO: implement below
+def handle_event_result():
+    pass

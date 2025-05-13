@@ -11,6 +11,7 @@ class CurrentState:
         self.member_id: str | None = None
         self.locker_id: str | None = None
         self.error: str | None = None
+        self.available_slots: list[str] = []
 
 state = CurrentState()
 
@@ -67,3 +68,9 @@ def set_error(msg: str) -> None:
 
 def get_error() -> str | None:
     return state.error
+
+def set_available_slots(slots: list[str]) -> None:
+    state.available_slots = slots
+
+def get_available_slots() -> list[str]:
+    return state.available_slots
