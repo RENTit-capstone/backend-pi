@@ -5,7 +5,7 @@ from typing import Literal
 from services import logic
 from services.gpio_controller import gpio
 from services.cache import (
-    set_rental_id, set_action, set_locker_id,
+    get_locker_id, set_rental_id, set_action, set_locker_id,
     get_available_slots, get_error
 )
 from services.config import settings
@@ -28,7 +28,18 @@ def perform_locker_action(request: PerformRequest) -> dict:
 
 @router.get("/locker/closed")
 def locker_closed_status():
+    slot_id = get_locker_id()
+    if not slot_id:
+        print("[GPIO] No Slot is opened.")
+        return {"closed": False}
+    
     closed = gpio.is_slot_closed()
+    if closed:
+        gpio.close_slot(slot_id)
+        print(f"[GPIO] Closed detected -> Lock completed: slot {slot_id}")
+    else:
+        print(f"[GPIO] Not closed yet: slot {slot_id}")
+
     return {"closed": closed}
 
 class EmptySlotRequest(BaseModel):

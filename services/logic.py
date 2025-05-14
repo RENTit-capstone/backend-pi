@@ -96,9 +96,6 @@ def perform_action() -> bool:
         print(f"[LOGIC] Locker {slot_id} opened")
 
         time.sleep(2)
-        
-        gpio.close_slot(slot_id)
-        print(f"[LOGIC] Closed slot {slot_id}")
 
         topic = "locker/request/event"
         payload = {
@@ -141,6 +138,15 @@ def handle_empty_locker(payload: dict) -> None:
     set_available_slots(available_lockers)
     print(f"[LOGIC] Available slots set: {available_lockers}")
 
-# TODO: implement below
-def handle_event_result():
-    pass
+def handle_event_result(payload: dict):
+    if payload.get("success") is not True:
+        msg = payload.get("message", "사물함 이벤트 처리 실패")
+        print(f"[LOGIC] Event failed: {msg}")
+        set_error(msg)
+        wipe_state()
+        return
+    data = payload.get("data", {})
+    locker_id = data.get("lockerId")
+    rental_id = data.get("rentalId")
+
+    print(f"[LOGIC] Event acknowledged by server (lockerId={locker_id}, rentalId={rental_id})")

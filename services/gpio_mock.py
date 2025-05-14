@@ -19,7 +19,7 @@ class GPIOMockController:
         self.current_open_slot = None
 
     def read_reed(self, slot_id: str) -> bool:
-        result = random.random() < 0.3
+        result = random.random() < 0.8
         print(f"[MOCK GPIO] Slot {slot_id}: read_reed() -> {result}")
         return result
 
