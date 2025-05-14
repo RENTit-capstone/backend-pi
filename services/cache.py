@@ -13,64 +13,73 @@ class CurrentState:
         self.error: str | None = None
         self.available_slots: list[str] = []
 
-state = CurrentState()
+global_state = CurrentState()
 
 def set_otp_key(otp: str) -> None:
-    state.otp = otp
+    global_state.otp = otp
     print("[Cache] Otp key cached successfully.")
 
-def cache_otp_result(response: dict) -> None:
-    state.response = response
-    state.verified = True
-    print(f"[Cache] OTP result cached for {state.otp}")
+def get_otp_key() -> str | None:
+    otp = global_state.otp
+    if otp is not None:
+        print(f"[Cache] Otp key({otp}) loaded successfully.")
+        return otp
+    print("[Cache] No otp key is set.")
+    return None
 
-def get_otp_key() -> dict | None:
-    if state.verified and state.response is not None:
-        return state.response
+def cache_otp_result(response: dict) -> None:
+    global_state.response = response
+    global_state.verified = True
+    print(f"[Cache] OTP result cached for {global_state.otp}")
+
+def get_otp_result() -> dict | None:
+    if global_state.verified and global_state.response is not None:
+        return global_state.response
+    print(f"[Cache] Error Occured: verified: {global_state.verified}, response: {global_state.response}")
     return None
 
 def wipe_state() -> None:
-    state.otp = None
-    state.verified = False
-    state.response = None
-    state.rental_id = None
-    state.action = None
-    state.member_id = None
-    state.locker_id = None
+    global_state.otp = None
+    global_state.verified = False
+    global_state.response = None
+    global_state.rental_id = None
+    global_state.action = None
+    global_state.member_id = None
+    global_state.locker_id = None
     print("[Cache] State wiped.")
 
 def set_rental_id(rental_id: str) -> None:
-    state.rental_id = rental_id
+    global_state.rental_id = rental_id
 
 def get_rental_id() -> str | None:
-    return state.rental_id
+    return global_state.rental_id
 
 def set_action(action: str) -> None:
-    state.action = action
+    global_state.action = action
 
 def get_action() -> str | None:
-    return state.action
+    return global_state.action
 
 def set_member_id(member_id: str) -> None:
-    state.member_id = member_id
+    global_state.member_id = member_id
 
 def get_member_id() -> str | None:
-    return state.member_id
+    return global_state.member_id
 
 def set_locker_id(locker_id: str) -> None:
-    state.locker_id = locker_id
+    global_state.locker_id = locker_id
 
 def get_locker_id() -> str | None:
-    return state.locker_id
+    return global_state.locker_id
 
 def set_error(msg: str) -> None:
-    state.error = msg
+    global_state.error = msg
 
 def get_error() -> str | None:
-    return state.error
+    return global_state.error
 
 def set_available_slots(slots: list[str]) -> None:
-    state.available_slots = slots
+    global_state.available_slots = slots
 
 def get_available_slots() -> list[str]:
-    return state.available_slots
+    return global_state.available_slots

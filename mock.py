@@ -1,5 +1,6 @@
 from services import mqtt_client
 import time
+from services.config import settings
 
 # ===============================
 # 🧠 내부 상태 (전부 인메모리 저장)
@@ -45,7 +46,7 @@ locker_status = {
     "4": True
 }
 
-LOCKER_ID = "locker01"
+LOCKER_ID = settings.LOCKER_ID
 
 # ===============================
 # 📨 응답 발행 도우미
@@ -65,6 +66,7 @@ def publish_response(topic: str, data: dict, success: bool = True, message: str 
 # ===============================
 
 def handle_otp_verification(payload):
+    print(f"[MOCK] handle_otp_verification called")
     otp = payload.get("otpCode")
     topic = f"locker/{LOCKER_ID}/eligible"
 
@@ -86,6 +88,7 @@ def handle_otp_verification(payload):
 # ===============================
 
 def handle_empty_locker_request(payload):
+    print(f"[MOCK] handle_empty_locker_request called")
     rental_id = payload.get("rentalId")
     topic = f"locker/{LOCKER_ID}/available"
 
@@ -114,6 +117,7 @@ def handle_empty_locker_request(payload):
 # ===============================
 
 def handle_event(payload):
+    print(f"[MOCK] handle_event called")
     locker_id = payload.get("lockerId")
     rental_id = payload.get("rentalId")
     topic = f"locker/{LOCKER_ID}/event"

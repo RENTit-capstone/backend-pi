@@ -8,7 +8,7 @@ locker_id = settings.LOCKER_ID
 
 
 def send_otp_verification(otp: str, action: str) -> None:
-    topic = "Locker/request/eligible"
+    topic = "locker/request/eligible"
     payload = {
         "deviceId": locker_id,
         "otpCode": otp,

@@ -1,8 +1,8 @@
 from services import mqtt_client
 from services.gpio_controller import gpio
 from services.cache import (
-    cache_otp_result, get_otp_key, set_member_id, set_action, wipe_state, set_error, set_available_slots,
-    get_locker_id, get_rental_id, get_member_id, get_action
+    cache_otp_result, get_otp_result, set_member_id, set_action, wipe_state, set_error, set_available_slots,
+    get_locker_id, get_rental_id, get_member_id, get_action, get_otp_key
 )
 from services.config import settings
 import time
@@ -49,7 +49,7 @@ def handle_otp_result(payload: dict) -> None:
             })
 
         cache_otp_result(parsed_result)
-        print(f"[LOGIC] OTP result cached for user {member_id}")
+        print(f"[LOGIC] OTP result cached for user: {member_id}")
 
     except Exception as e:
         print(f"[LOGIC] Failed to parse OTP result payload: {e}")
