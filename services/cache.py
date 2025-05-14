@@ -79,6 +79,7 @@ def get_error() -> str | None:
     return global_state.error
 
 def set_available_slots(slots: list[str]) -> None:
+    print(f"[Cache] Available Slots were cached: {slots}")
     global_state.available_slots = slots
 
 def get_available_slots() -> list[str]:

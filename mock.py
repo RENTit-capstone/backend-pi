@@ -107,6 +107,7 @@ def handle_empty_locker_request(payload):
     ]
 
     data = {
+        "deviceId": LOCKER_ID,
         "rentalId": rental_id,
         "lockers": available
     }
