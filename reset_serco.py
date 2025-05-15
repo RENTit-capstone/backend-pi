@@ -10,7 +10,7 @@ servo = Servo(SERVO_PIN)
 
 # 중앙(0도) 위치로 이동
 print("서보모터를 0도(중앙) 위치로 이동합니다.")
-servo.value = 0.0
+servo.value = -1.0
 
 # 모터 위치 설정 후 잠깐 대기
 time.sleep(0.5)

@@ -17,7 +17,7 @@ class GPIORpiController:
 
     def set_angle(self, slot_id: str, angle: int):
         angle = max(0, min(angle, 180))
-        position = (angle - 90) / 90
+        position = (angle / 45.0) - 1.0
         self.servos[slot_id].value = position
         time.sleep(0.5)
         self.servos[slot_id].detach()
