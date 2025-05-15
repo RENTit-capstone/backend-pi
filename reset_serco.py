@@ -1,4 +1,4 @@
-from gpiozero import Servo
+from gpiozero import Servo, DigitalInputDevice
 import time
 
 # 사용할 GPIO 핀 번호 설정 (예: 17번 핀)
