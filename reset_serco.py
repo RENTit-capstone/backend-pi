@@ -23,4 +23,4 @@ print("초기화 완료. 서보모터 연결 해제됨.")
 reed = DigitalInputDevice(REED_PIN, pull_up=False)
 reed_val = reed.value
 
-print("리드 스위치 상태: {reed_val}")
+print(f"리드 스위치 상태: {reed_val}")
