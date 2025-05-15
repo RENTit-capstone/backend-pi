@@ -6,7 +6,7 @@ from services import logic
 from services.gpio_controller import gpio
 from services.cache import (
     get_locker_id, set_rental_id, set_action, set_locker_id,
-    get_available_slots, get_error
+    get_available_slots, get_error, get_is_opened, set_is_opened
 )
 from services.config import settings
 
@@ -34,7 +34,17 @@ def locker_closed_status():
         return {"closed": False}
     
     closed = gpio.is_slot_closed()
-    if closed:
+
+    if not get_is_opened() and closed:
+        print("[GPIO] Locker is not opened yet...")
+        return {"closed": False}
+    
+    if not get_is_opened() and not closed:
+        print("[GPIO] User opened locker. action began.")
+        set_is_opened(True)
+        return {"closed": False}
+
+    if get_is_opened() and closed:
         gpio.close_slot(slot_id)
         print(f"[GPIO] Closed detected -> Lock completed: slot {slot_id}")
     else:

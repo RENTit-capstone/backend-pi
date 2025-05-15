@@ -1,8 +1,8 @@
 from services import mqtt_client
 from services.gpio_controller import gpio
 from services.cache import (
-    cache_otp_result, get_otp_result, set_member_id, set_action, wipe_state, set_error, set_available_slots,
-    get_locker_id, get_rental_id, get_member_id, get_action, get_otp_key
+    cache_otp_result, set_member_id, set_action, wipe_state, set_error, set_available_slots,
+    get_locker_id, get_rental_id, get_member_id, get_action, get_otp_key, set_is_opened
 )
 from services.config import settings
 import time
@@ -94,20 +94,9 @@ def perform_action() -> bool:
 
         gpio.open_slot(slot_id)
         print(f"[LOGIC] Locker {slot_id} opened")
+        set_is_opened(False)
 
         time.sleep(2)
-
-        topic = "locker/request/event"
-        payload = {
-            "deviceId": locker_id,
-            "lockerId": slot_id,
-            "rentalId": rental_id,
-            "memberId": member_id,
-            "action": action
-        }
-
-        mqtt_client.publish(topic, payload)
-        print(f"[LOGIC] Event published: {payload}")
 
         return True
     

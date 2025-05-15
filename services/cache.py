@@ -12,6 +12,7 @@ class CurrentState:
         self.locker_id: str | None = None
         self.error: str | None = None
         self.available_slots: list[str] = []
+        self.is_opened: bool = False
 
 global_state = CurrentState()
 
@@ -84,3 +85,9 @@ def set_available_slots(slots: list[str]) -> None:
 
 def get_available_slots() -> list[str]:
     return global_state.available_slots
+
+def set_is_opened(status: bool) -> None:
+    global_state.is_opened = status
+
+def get_is_opened() -> bool:
+    return global_state.is_opened
