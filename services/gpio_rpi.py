@@ -14,7 +14,7 @@ class GPIORpiController:
         for slot_id, pins in self.PIN_MAP.items():
             self.servos[slot_id] = Servo(pins["servo"])
             self.reeds[slot_id] = DigitalInputDevice(pins["reed"], pull_up=False)
-            self.close_slot(pins["servo"])
+            self.close_slot(slot_id)
 
     def set_angle(self, slot_id: str, angle: int):
         angle = max(0, min(angle, 180))
