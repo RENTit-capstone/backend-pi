@@ -1,8 +1,6 @@
 from gpiozero import Servo, DigitalInputDevice
 import time
 
-from services.cache import get_current_open_slot
-
 class GPIORpiController:
     PIN_MAP = {
         "A1": {"servo": 17, "reed": 27}
@@ -11,6 +9,7 @@ class GPIORpiController:
     def __init__(self):
         self.servos = {}
         self.reeds = {}
+        self.current_open_slot = None
 
         for slot_id, pins in self.PIN_MAP.items():
             self.servos[slot_id] = Servo(pins["servo"])
@@ -25,15 +24,21 @@ class GPIORpiController:
 
     def open_slot(self, slot_id: str):
         self.set_angle(slot_id, 90)
+        print(f"[GPIO] Slot {slot_id}: OPEN")
+        self.current_open_slot = slot_id
 
     def close_slot(self, slot_id: str):
         self.set_angle(slot_id, 0)
+        print(f"[GPIO] Slot {slot_id}: CLOSE")
+        self.current_open_slot = None
 
     def read_reed(self, slot_id: str) -> bool:
-        return self.reeds[slot_id].value
-    
+        value = self.reeds[slot_id].value
+        print(f"[GPIO] Slot {slot_id}: read_reed() -> {value}")
+        return value
+
     def is_slot_closed(self) -> bool:
-        slot_id = get_current_open_slot()
+        slot_id = self.current_open_slot
         if slot_id is None:
             print("[GPIO] 현재 열린 사물함 정보가 없습니다.")
             return False

@@ -33,7 +33,7 @@ otp_map = {
                 "rentalId": "r101",
                 "itemId": "item_101",
                 "itemName": "노트북 거치대",
-                "lockerId": "2"
+                "lockerId": "1"
             }
         ]
     }
