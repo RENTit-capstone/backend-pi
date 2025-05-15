@@ -13,6 +13,7 @@ class CurrentState:
         self.error: str | None = None
         self.available_slots: list[str] = []
         self.is_opened: bool = False
+        self.fee: int = 0
 
 global_state = CurrentState()
 
@@ -91,3 +92,9 @@ def set_is_opened(status: bool) -> None:
 
 def get_is_opened() -> bool:
     return global_state.is_opened
+
+def set_fee(val: int) -> None:
+    global_state.fee = val
+
+def get_fee() -> int | None:
+    return global_state.fee

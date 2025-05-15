@@ -6,9 +6,12 @@ from services import logic
 from services.gpio_controller import gpio
 from services.cache import (
     get_locker_id, set_rental_id, set_action, set_locker_id,
-    get_available_slots, get_error, get_is_opened, set_is_opened
+    get_available_slots, get_error, get_is_opened, set_is_opened, set_fee,
+    get_rental_id, get_member_id, get_action, get_fee
 )
 from services.config import settings
+from services import mqtt_client
+
 
 router = APIRouter()
 
@@ -16,12 +19,14 @@ class PerformRequest(BaseModel):
     action: Literal["DROP_OFF_BY_OWNER", "PICK_UP_BY_RENTER", "RETURN_BY_RENTER", "RETRIEVE_BY_OWNER"]
     rentalId: str
     lockerId: str
+    fee: int
 
 @router.post("/locker/perform")
 def perform_locker_action(request: PerformRequest) -> dict:
     set_action(request.action)
     set_rental_id(request.rentalId)
     set_locker_id(request.lockerId)
+    set_fee(request.fee)
     
     success = logic.perform_action()
     return {"success": success}
@@ -47,6 +52,16 @@ def locker_closed_status():
     if get_is_opened() and closed:
         gpio.close_slot(slot_id)
         print(f"[GPIO] Closed detected -> Lock completed: slot {slot_id}")
+
+        payload = {
+            "deviceId": get_locker_id(),
+            "lockerId": slot_id,
+            "rentalId": get_rental_id(),
+            "memberId": get_member_id(),
+            "action": get_action(),
+            "fee": get_fee()
+        }
+        mqtt_client.publish("locker/request/event", payload)
     else:
         print(f"[GPIO] Not closed yet: slot {slot_id}")
 

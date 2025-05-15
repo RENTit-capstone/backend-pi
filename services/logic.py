@@ -2,7 +2,7 @@ from services import mqtt_client
 from services.gpio_controller import gpio
 from services.cache import (
     cache_otp_result, set_member_id, set_action, wipe_state, set_error, set_available_slots,
-    get_locker_id, get_rental_id, get_member_id, get_action, get_otp_key, set_is_opened
+    get_locker_id, get_rental_id, get_member_id, get_action, get_otp_key, set_is_opened, get_fee
 )
 from services.config import settings
 import time
@@ -82,11 +82,9 @@ def start_subscribers() -> None:
 def perform_action() -> bool:
     try:
         slot_id = get_locker_id()
-        rental_id = get_rental_id()
-        member_id = get_member_id()
         action = get_action()
 
-        if not all([slot_id, rental_id, member_id, action]):
+        if not all([slot_id]):
             print("[LOGIC] Missing required state for perform_aciton")
             return False
         
@@ -121,11 +119,13 @@ def handle_empty_locker(payload: dict) -> None:
     available_lockers = [
         locker["lockerId"]
         for locker in data["lockers"]
-        if locker.get("available") is True
+        if locker.get("available") is True and locker.get("payable") is True
     ]
 
     set_available_slots(available_lockers)
     print(f"[LOGIC] Available slots set: {available_lockers}")
+    for locker in available_lockers:
+        print(f"  - ID: {locker['lockerId']}, Fee: {locker.get('fee')}, Balance: {locker.get('balance')}, Payable: ✅")
 
 def handle_event_result(payload: dict):
     if payload.get("success") is not True:
