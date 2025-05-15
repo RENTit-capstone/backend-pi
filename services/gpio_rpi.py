@@ -3,7 +3,7 @@ import time
 
 class GPIORpiController:
     PIN_MAP = {
-        "A1": {"servo": 17, "reed": 27}
+        "1": {"servo": 17, "reed": 27}
     }
 
     def __init__(self):
