@@ -6,6 +6,8 @@ from services.config import settings
 # 🧠 내부 상태 (전부 인메모리 저장)
 # ===============================
 
+balance = 5000
+
 otp_map = {
     "00000": {
         "memberId": "user1",
@@ -15,13 +17,15 @@ otp_map = {
                 "rentalId": "r001",
                 "itemId": "item_001",
                 "itemName": "삼각대",
-                "lockerId": None
+                "lockerId": None,
+                "fee": 1000
             },
             {
                 "rentalId": "r002",
                 "itemId": "item_002",
                 "itemName": "조명",
-                "lockerId": None
+                "lockerId": None,
+                "fee": 10000
             }
         ]
     },
@@ -33,7 +37,8 @@ otp_map = {
                 "rentalId": "r101",
                 "itemId": "item_101",
                 "itemName": "노트북 거치대",
-                "lockerId": "1"
+                "lockerId": "1",
+                "fee": 1000
             }
         ]
     }
@@ -75,11 +80,27 @@ def handle_otp_verification(payload):
         return
 
     user_info = otp_map[otp]
+    rentals = []
+
+    for r in user_info["rentals"]:
+        payable = balance >= r["fee"]
+
+        rental = {
+            "rentalId": r["rentalId"],
+            "itemId": r["itemId"],
+            "itemName": r["itemName"],
+            "lockerId": r.get("lockerId"),
+            "fee": r["fee"],
+            "balance": balance,
+            "payable": payable
+        }
+        rentals.append(rental)
+
     data = {
         "deviceId": LOCKER_ID,
         "action": user_info["action"],
         "memberId": user_info["memberId"],
-        "rentals": user_info["rentals"]
+        "rentals": rentals
     }
     publish_response(topic, data)
 

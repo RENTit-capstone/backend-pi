@@ -45,8 +45,12 @@ def handle_otp_result(payload: dict) -> None:
             parsed_result["items"].append({
                 "item_id": r["itemId"],
                 "name": r["itemName"],
-                "slot": r.get("lockerId")
+                "slot": r.get("lockerId"),
+                "fee": r.get("fee"),
+                "balance": r.get("balance"),
+                "payable": r.get("payable", True)
             })
+
 
         cache_otp_result(parsed_result)
         print(f"[LOGIC] OTP result cached for user: {member_id}")
@@ -88,7 +92,7 @@ def perform_action() -> bool:
             print("[LOGIC] Missing required state for perform_aciton")
             return False
         
-        print(f"[LOGIC] Performing {action} on locker {slot_id} (rentalId={rental_id}, memberId={member_id})")
+        print(f"[LOGIC] Performing {action} on locker {slot_id}")
 
         gpio.open_slot(slot_id)
         print(f"[LOGIC] Locker {slot_id} opened")
@@ -119,13 +123,13 @@ def handle_empty_locker(payload: dict) -> None:
     available_lockers = [
         locker["lockerId"]
         for locker in data["lockers"]
-        if locker.get("available") is True and locker.get("payable") is True
+        if locker.get("available") is True
     ]
 
     set_available_slots(available_lockers)
     print(f"[LOGIC] Available slots set: {available_lockers}")
     for locker in available_lockers:
-        print(f"  - ID: {locker['lockerId']}, Fee: {locker.get('fee')}, Balance: {locker.get('balance')}, Payable: ✅")
+        print(f"  - ID: {locker.get('lockerId')}, Fee: {locker.get('fee')}, Balance: {locker.get('balance')}, Payable: ✅")
 
 def handle_event_result(payload: dict):
     if payload.get("success") is not True:

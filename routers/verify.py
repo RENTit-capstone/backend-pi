@@ -27,7 +27,6 @@ def get_verification_result() -> dict:
             }
         return {"verified": None }
     
-
     return {
         "verified": True,
         **result
