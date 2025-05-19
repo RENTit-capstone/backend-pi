@@ -59,13 +59,13 @@ def handle_otp_result(payload: dict) -> None:
         print(f"[LOGIC] Failed to parse OTP result payload: {e}")
         wipe_state()
 
-def get_empty_slot(rentalId: str, action: str) -> None:
+def get_empty_slot(rentalId: int, action: str) -> None:
     topic = "locker/request/available"
     payload = {
         "deviceId": locker_id,
         "otpCode": None,
         "action": action,
-        "rentalId": rentalId
+        "rentalId": str(rentalId)
     }
     mqtt_client.publish(topic, payload)
     print(f"[LOGIC] Emtpy Slot require published")

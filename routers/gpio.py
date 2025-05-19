@@ -68,7 +68,7 @@ def locker_closed_status():
     return {"closed": closed}
 
 class EmptySlotRequest(BaseModel):
-    rentalId: Union[str, int]
+    rentalId: int
     action: Literal["DROP_OFF_BY_OWNER", "RETURN_BY_RENTER"]
 
 @router.post("/locker/empty")
