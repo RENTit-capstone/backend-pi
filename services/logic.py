@@ -121,7 +121,7 @@ def handle_empty_locker(payload: dict) -> None:
         return
     
     available_lockers = [
-        locker["lockerId"]
+        locker
         for locker in data["lockers"]
         if locker.get("available") is True
     ]

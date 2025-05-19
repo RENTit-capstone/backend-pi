@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from typing import Literal
+from typing import Literal, Union
 
 from services import logic
 from services.gpio_controller import gpio
@@ -68,7 +68,7 @@ def locker_closed_status():
     return {"closed": closed}
 
 class EmptySlotRequest(BaseModel):
-    rentalId: str
+    rentalId: Union[str, int]
     action: Literal["DROP_OFF_BY_OWNER", "RETURN_BY_RENTER"]
 
 @router.post("/locker/empty")
