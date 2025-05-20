@@ -5,6 +5,8 @@ class Settings(BaseSettings):
     MQTT_BROKER: str
     MQTT_PORT: int
     MQTT_KEEPALIVE: int = 60
+    MQTT_USERNAME: str
+    MQTT_PASSWORD: str
     LOCKER_ID: str
     SLOTS: list[str] = [""]
 
