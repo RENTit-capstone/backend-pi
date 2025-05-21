@@ -43,6 +43,7 @@ def handle_otp_result(payload: dict) -> None:
 
         for r in rentals:
             parsed_result["items"].append({
+                "rental_id": r["rentalId"],
                 "item_id": r["itemId"],
                 "name": r["itemName"],
                 "slot": r.get("lockerId"),
