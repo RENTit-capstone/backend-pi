@@ -7,6 +7,8 @@ from services.config import settings
 MQTT_BROKER = settings.MQTT_BROKER
 MQTT_PORT = settings.MQTT_PORT
 MQTT_KEEPALIVE = settings.MQTT_KEEPALIVE
+MQTT_USERNAME = settings.MQTT_USERNAME
+MQTT_PASSWORD = settings.MQTT_PASSWORD
 
 mqtt_client = mqtt.Client()
 callback_registry = {}
@@ -53,6 +55,7 @@ def start() -> None:
     mqtt_client.on_connect = on_connect
     mqtt_client.on_message = on_message
 
+    mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
     mqtt_client.connect(MQTT_BROKER, MQTT_PORT, MQTT_KEEPALIVE)
 
     thread = threading.Thread(target=mqtt_client.loop_forever, daemon=True)
