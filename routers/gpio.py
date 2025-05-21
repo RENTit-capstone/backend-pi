@@ -94,9 +94,7 @@ def locker_empty_result():
             "data": {
                 "lockers": [
                     {
-                        "deviceId": settings.LOCKER_ID,
-                        "lockerId": slot,
-                        "available": True
+                        "locker": slot,
                     } for slot in slots
                 ]
             },
