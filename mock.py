@@ -10,19 +10,19 @@ balance = 5000
 
 otp_map = {
     "00000": {
-        "memberId": "user1",
+        "memberId": 1,
         "action": "DROP_OFF_BY_OWNER",
         "rentals": [
             {
-                "rentalId": "r001",
-                "itemId": "item_001",
+                "rentalId": 1,
+                "itemId": 1,
                 "itemName": "삼각대",
                 "lockerId": None,
                 "fee": 1000
             },
             {
-                "rentalId": "r002",
-                "itemId": "item_002",
+                "rentalId": 2,
+                "itemId": 2,
                 "itemName": "조명",
                 "lockerId": None,
                 "fee": 10000
@@ -30,12 +30,12 @@ otp_map = {
         ]
     },
     "11111": {
-        "memberId": "user2",
+        "memberId": 2,
         "action": "PICK_UP_BY_RENTER",
         "rentals": [
             {
-                "rentalId": "r101",
-                "itemId": "item_101",
+                "rentalId": 3,
+                "itemId": 3,
                 "itemName": "노트북 거치대",
                 "lockerId": "1",
                 "fee": 1000
