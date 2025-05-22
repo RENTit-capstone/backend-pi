@@ -12,6 +12,7 @@ otp_map = {
     "00000": {
         "memberId": 1,
         "action": "DROP_OFF_BY_OWNER",
+        "nickname":"가ㅏ가ㅏ가가",
         "rentals": [
             {
                 "rentalId": 1,
@@ -32,6 +33,7 @@ otp_map = {
     "11111": {
         "memberId": 2,
         "action": "PICK_UP_BY_RENTER",
+        "nickname":"나난난나나ㅏ나ㅏㅏ",
         "rentals": [
             {
                 "rentalId": 3,
