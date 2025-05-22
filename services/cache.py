@@ -9,6 +9,7 @@ class CurrentState:
         self.rental_id: str | None = None
         self.action: str | None = None
         self.member_id: str | None = None
+        self.nickname: str | None = None
         self.locker_id: str | None = None
         self.error: str | None = None
         self.available_slots: list[str] = []
@@ -98,3 +99,10 @@ def set_fee(val: int) -> None:
 
 def get_fee() -> int | None:
     return global_state.fee
+
+def set_nickname(nickname: str) -> None:
+    global_state.nickname = nickname
+    print(f"[Cache] New user came. And his name is {nickname}")
+
+def get_nickname() -> str | None:
+    return global_state.nickname
