@@ -1,8 +1,8 @@
 from services import mqtt_client
 from services.gpio_controller import gpio
 from services.cache import (
-    cache_otp_result, set_member_id, set_action, wipe_state, set_error, set_available_slots,
-    get_locker_id, get_rental_id, get_member_id, get_action, get_otp_key, set_is_opened, get_fee
+    cache_otp_result, set_member_id, set_action, set_nickname, wipe_state, set_error, set_available_slots,
+    get_locker_id, get_action, get_otp_key, set_is_opened, get_nickname
 )
 from services.config import settings
 import time
@@ -32,17 +32,23 @@ def handle_otp_result(payload: dict) -> None:
         member_id = data["memberId"]
         action = data["action"]
         rentals = data["rentals"]
+        nickname = data["nickname"]
+
+        print("[DEBUG] nickname set", nickname)
 
         set_member_id(member_id)
         set_action(action)
+        set_nickname(nickname)
 
         parsed_result = {
-            "user_name": member_id,
+            "member_id": member_id,
+            "nickname": nickname,
             "items": []
         }
 
         for r in rentals:
             parsed_result["items"].append({
+                "rental_id": r["rentalId"],
                 "item_id": r["itemId"],
                 "name": r["itemName"],
                 "slot": r.get("lockerId"),
