@@ -102,6 +102,7 @@ def handle_otp_verification(payload):
         "deviceId": LOCKER_ID,
         "action": user_info["action"],
         "memberId": user_info["memberId"],
+        "nickname": user_info["nickname"],
         "rentals": rentals
     }
     publish_response(topic, data)
