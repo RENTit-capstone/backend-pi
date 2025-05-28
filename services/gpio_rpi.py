@@ -36,7 +36,8 @@ class GPIORpiController:
         self.current_open_slot = None
 
     def read_reed(self, slot_id: str) -> bool:
-        value = self.reeds[slot_id].value
+        #value = self.reeds[slot_id].value
+        value = self.reeds["1"].value
         print(f"[GPIO] Slot {slot_id}: read_reed() -> {value}")
         return value
 

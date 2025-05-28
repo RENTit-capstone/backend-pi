@@ -54,7 +54,7 @@ def locker_closed_status():
         print(f"[GPIO] Closed detected -> Lock completed: slot {slot_id}")
 
         payload = {
-            "deviceId": get_locker_id(),
+            "deviceId": settings.LOCKER_ID,
             "lockerId": slot_id,
             "rentalId": get_rental_id(),
             "memberId": get_member_id(),
