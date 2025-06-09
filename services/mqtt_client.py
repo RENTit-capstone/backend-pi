@@ -40,7 +40,7 @@ def publish(topic: str, message: dict) -> None:
     try:
         json_message = json.dumps(message)
         print(f"[MQTT] Publishing to {topic}: {json_message}")
-        mqtt_client.publish(topic, json_message)
+        mqtt_client.publish(topic, json_message, qos=1)
     except Exception as e:
         print(f"[MQTT] Failed to publish to {topic}: {e}")
 
@@ -48,7 +48,7 @@ def publish(topic: str, message: dict) -> None:
 def subscribe(topic: str, callback) -> None:
     print(f"[MQTT] Subscribing to {topic}")
     callback_registry[topic] = callback
-    mqtt_client.subscribe(topic)
+    mqtt_client.subscribe(topic, qos=1)
 
 
 def start() -> None:

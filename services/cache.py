@@ -43,12 +43,17 @@ def get_otp_result() -> dict | None:
 
 def wipe_state() -> None:
     global_state.otp = None
-    global_state.verified = False
+    global_state.verified = None
     global_state.response = None
     global_state.rental_id = None
     global_state.action = None
     global_state.member_id = None
+    global_state.nickname = None
     global_state.locker_id = None
+    global_state.error = None
+    global_state.available_slots = []
+    global_state.is_opened = False
+    global_state.fee = 0
     print("[Cache] State wiped.")
 
 def set_rental_id(rental_id: str) -> None:
