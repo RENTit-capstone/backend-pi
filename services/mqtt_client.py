@@ -7,6 +7,8 @@ from services.config import settings
 MQTT_BROKER = settings.MQTT_BROKER
 MQTT_PORT = settings.MQTT_PORT
 MQTT_KEEPALIVE = settings.MQTT_KEEPALIVE
+MQTT_USERNAME = settings.MQTT_USERNAME
+MQTT_PASSWORD = settings.MQTT_PASSWORD
 
 mqtt_client = mqtt.Client()
 callback_registry = {}
@@ -38,7 +40,7 @@ def publish(topic: str, message: dict) -> None:
     try:
         json_message = json.dumps(message)
         print(f"[MQTT] Publishing to {topic}: {json_message}")
-        mqtt_client.publish(topic, json_message)
+        mqtt_client.publish(topic, json_message, qos=1)
     except Exception as e:
         print(f"[MQTT] Failed to publish to {topic}: {e}")
 
@@ -46,13 +48,14 @@ def publish(topic: str, message: dict) -> None:
 def subscribe(topic: str, callback) -> None:
     print(f"[MQTT] Subscribing to {topic}")
     callback_registry[topic] = callback
-    mqtt_client.subscribe(topic)
+    mqtt_client.subscribe(topic, qos=1)
 
 
 def start() -> None:
     mqtt_client.on_connect = on_connect
     mqtt_client.on_message = on_message
 
+    mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
     mqtt_client.connect(MQTT_BROKER, MQTT_PORT, MQTT_KEEPALIVE)
 
     thread = threading.Thread(target=mqtt_client.loop_forever, daemon=True)
