@@ -1,3 +1,6 @@
+# 대학교내 물품 대여 서비스 RENTit
+![KakaoTalk_20250605_232252838.jpg](attachment:9bd20df8-d978-443e-985e-4daf6ab013ec:KakaoTalk_20250605_232252838.jpg)
+
 # About
 *FastAPI*로 구성된 Python 서버입니다.
 
